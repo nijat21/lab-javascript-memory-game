@@ -5,28 +5,14 @@ class MemoryGame {
     this.pickedCards = [];
     this.pairsClicked = 0;
     this.pairsGuessed = 0;
-    this.shuffledCards = [];
   }
 
 
   shuffleCards() {
     // ... write your code here
-    if (!this.cards) {
-      return;
+    if (this.cards) {
+      return this.cards.sort(() => Math.random() - 0.5);
     }
-
-    shuffledCards = JSON.parse(JSON.stringify(this.cards));
-    const n = shuffledCards.length;
-
-    for (let i = 0; i < n; i++) {
-      let j = Math.floor(Math.random() * i);
-      let temp = shuffledCards[i];
-      if (j !== i) {
-        shuffledCards[i] = shuffledCards[j];
-      }
-      shuffledCards[j] = temp;
-    }
-    return shuffledCards;
   }
 
 
@@ -49,6 +35,13 @@ class MemoryGame {
       return true;
     }
     return false;
+  }
+
+  gameFinished() {
+    const gameFinished = document.getElementById('game-finished');
+    document.getElementById('memory-board').style.display = 'none';
+    gameFinished.style.display = 'block';
+    gameFinished.style.backgroundColor = 'white';
   }
 }
 

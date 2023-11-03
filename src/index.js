@@ -38,33 +38,52 @@ window.addEventListener('load', (event) => {
     `;
   });
 
+  document.getElementById('game-finished').style.display = 'none';
+
   // Add all the divs to the HTML
   document.querySelector('#memory-board').innerHTML = html;
 
-  let count = 0;
+
   // Bind the click event of each element to a function
   document.querySelectorAll('.card').forEach((card) => {
     card.addEventListener('click', () => {
       // TODO: write some code here
-      count++;
-
       console.log(`Card clicked: ${card}`);
+
+      // push all the cards into the pickedCards array
+      memoryGame.pickedCards.push(card);
       card.classList.toggle('turned');
 
-      let turnedTags = document.querySelectorAll('.turned');
-      let n = turnedTags.length;
-      if (count % 2 === 0 && count !== 0) {
+      const cardsPicked = memoryGame.pickedCards;
 
-        let turnedTag1 = turnedTags[n - 1].getAttribute('data-card-name');
-        let turnedTag2 = turnedTags[n - 2].getAttribute('data-card-name');
+      if (memoryGame.pickedCards.length === 2) {
 
-        if (!memoryGame.checkIfPair(turnedTag1, turnedTag2)) {
-          this.pickedCards.classList.remove('turned');
+        let card1 = memoryGame.pickedCards[0].getAttribute('data-card-name');
+        let card2 = memoryGame.pickedCards[1].getAttribute('data-card-name');
+
+        if (!memoryGame.checkIfPair(card1, card2)) {
+          memoryGame.pickedCards.forEach(element => {
+            setTimeout(() => {
+              element.classList.toggle('turned');
+            }, 1000);
+          });
         }
-
+        // Empty the array for the next pair
+        memoryGame.pickedCards = [];
       }
-      console.log(turnedTags)
+
+      // Updating the scorecard
+      let clicked = document.getElementById('pairs-clicked');
+      clicked.innerText = memoryGame.pairsClicked;
+      let matched = document.getElementById('pairs-guessed');
+      matched.innerText = memoryGame.pairsGuessed;
+
+      if (memoryGame.checkIfFinished()) {
+        // hide the game screen and show the end screen
+        memoryGame.gameFinished();
+      }
 
     });
   });
+
 });
